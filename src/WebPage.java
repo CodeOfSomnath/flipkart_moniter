@@ -6,9 +6,29 @@ import java.util.List;
 
 public class WebPage {
     private String pageTitle;
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+
     private String pageUrl;
+
+    
+
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
+
     private int actualPrice;
     private int targetPrice;
+    public void setTargetPrice(int price) {
+        this.targetPrice = price;
+    }
+
+    public int getTargetPrice() {
+        return targetPrice;
+    }
 
     public int getCurrentPrice() {
         return currentPrice;
@@ -19,9 +39,15 @@ public class WebPage {
     private File pageSource;
     private final String specialKey = "₹";
 
-    public WebPage(String pageTitle, String pageUrl) {
+    public String getRsSign(){
+        return specialKey;
+    }
+
+    public WebPage(String pageTitle, String pageUrl) throws IOException, InterruptedException {
         this.pageUrl = pageUrl;
         this.pageTitle = pageTitle;
+        this.loadPage();
+        this.loadPrice();
 
     }
 
