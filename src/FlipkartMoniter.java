@@ -1,4 +1,10 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -35,6 +41,22 @@ public class FlipkartMoniter extends Thread {
         );
     }
 
+
+    public void updateWebPagesList() throws IOException, InterruptedException {
+        File file = new File("/tmp/moniter_stdin.txt");
+        FileWriter writer = new FileWriter(file, true);
+        if (file.exists()) {
+            List<String> lines = Files.readAllLines(Path.of(file.getAbsolutePath()));
+            String title = lines.get(0).strip();
+            String url = lines.get(1).strip();
+            pages.add(new WebPage(title, url));
+            writer.write("");
+            writer.close();
+        }
+        
+    }
+
+
     @Override
     public void run() {
         WebPage page;
@@ -49,10 +71,11 @@ public class FlipkartMoniter extends Thread {
                     );
                     pages.remove(i);
                 }
-            }
-
-            if (pages.size() == 0) {
-                this.exit();
+                try {
+                    updateWebPagesList();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
